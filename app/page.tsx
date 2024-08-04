@@ -41,7 +41,30 @@ export default function Home() {
           }}
         />
       </div>
-      <button className={styles['upload-button']}>
+      <button
+        className={styles['upload-button']}
+        onClick={() => {
+          if (!localFileList[0]) {
+            return;
+          }
+
+          const formData = new FormData();
+          formData.append('fileName', localFileList[0].name);
+          fetch('/api/create-presigned-url', {
+            method: 'POST',
+            body: formData,
+          })
+            .then((response) => response.json())
+            .then(async (body) => {
+              console.log(body.signedUrl);
+
+              fetch(body.signedUrl, {
+                method: 'PUT',
+                body: await localFileList[0].arrayBuffer(),
+              });
+            });
+        }}
+      >
         <span className={styles.code}>Upload Images</span>
       </button>
 
