@@ -41,6 +41,12 @@ export default function Home() {
           }}
         />
       </div>
+      <button className={styles['upload-button']}>
+        <span className={styles.code}>Upload Images</span>
+      </button>
+
+      <span className={styles.code}>Uploaded Images</span>
+      <ImageList imageFiles={[]} />
     </main>
   );
 }
