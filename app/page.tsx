@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 
 import ImageList from '^/src/shared/image-list';
 
@@ -8,11 +8,17 @@ import styles from './page.module.css';
 
 export default function Home() {
   const [localFileList, setLocalFileList] = useState<File[]>([]);
+  const [uploadedFileList, setUploadedFileList] = useState<string[]>([]);
+
+  const localImageUrls = useMemo(
+    () => localFileList.map((localFile) => URL.createObjectURL(localFile)),
+    [localFileList]
+  );
 
   return (
     <main className={styles.main}>
       <span className={styles.code}>Selected Local Images</span>
-      <ImageList imageFiles={localFileList} />
+      <ImageList imageUrls={localImageUrls} />
       <div className={styles['file-input']}>
         <label className={styles.code} htmlFor="file-select">
           Select Files
@@ -61,6 +67,8 @@ export default function Home() {
               fetch(body.signedUrl, {
                 method: 'PUT',
                 body: await localFileList[0].arrayBuffer(),
+              }).then(() => {
+                setUploadedFileList(uploadedFileList.concat([body.fileUrl]));
               });
             });
         }}
@@ -69,7 +77,7 @@ export default function Home() {
       </button>
 
       <span className={styles.code}>Uploaded Images</span>
-      <ImageList imageFiles={[]} />
+      <ImageList imageUrls={uploadedFileList} />
     </main>
   );
 }

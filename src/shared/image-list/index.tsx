@@ -2,15 +2,15 @@
 import styles from './index.module.css';
 
 interface Props {
-  imageFiles: File[];
+  imageUrls: string[];
 }
 
-export default function ImageList({ imageFiles }: Props) {
-  const renderThumnails = imageFiles.map((imageFile, index) => (
+export default function ImageList({ imageUrls }: Props) {
+  const renderThumnails = imageUrls.map((imageUrl, index) => (
     <img
-      key={`image-${index}-${imageFile.name}`}
-      src={URL.createObjectURL(imageFile)}
-      alt={imageFile.name}
+      key={`image-${index}`}
+      src={imageUrl}
+      alt={`Uploaded image ${index + 1}`}
     />
   ));
 

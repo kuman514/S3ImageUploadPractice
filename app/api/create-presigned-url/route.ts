@@ -1,4 +1,4 @@
-import { S3Client, PutObjectCommand } from '@aws-sdk/client-s3';
+import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { NextResponse } from 'next/server';
 
@@ -21,11 +21,15 @@ async function getSignedFileUrl(fileName: File['name']) {
     Key: fileName,
   };
   const command = new PutObjectCommand(params);
-  const url = await getSignedUrl(s3, command, {
+  const signedUrl = await getSignedUrl(s3, command, {
     expiresIn: 3600,
   });
+  const fileUrl = `https://${amazonS3Bucket}.s3.${amazonS3BucketRegion}.amazonaws.com/${fileName}`;
 
-  return url;
+  return {
+    signedUrl,
+    fileUrl,
+  };
 }
 
 export async function POST(request: Request) {
@@ -33,8 +37,8 @@ export async function POST(request: Request) {
   const fileName = formData.get('fileName') as string;
 
   try {
-    const signedUrl = await getSignedFileUrl(fileName);
-    return NextResponse.json({ signedUrl }, { status: 201 });
+    const { signedUrl, fileUrl } = await getSignedFileUrl(fileName);
+    return NextResponse.json({ signedUrl, fileUrl }, { status: 201 });
   } catch {
     return NextResponse.json(
       { error: 'Getting S3 signed URL did not work.' },
