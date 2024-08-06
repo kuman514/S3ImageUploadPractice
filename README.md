@@ -14,6 +14,7 @@ Amazon S3로의 이미지 업로드를 연마하는 연습용 토이 프로젝�
 - [Amazon S3 객체 업로드](https://docs.aws.amazon.com/ko_kr/AmazonS3/latest/userguide/upload-objects.html)
 - [AWS SDK를 사용하여 미리 서명된 URL을 통해 객체 공유 (영문)](https://docs.aws.amazon.com/AmazonS3/latest/userguide/example_s3_Scenario_PresignedUrl_section.html)
 - [다른 분이 Next.js를 활용하여 작성한 예시](https://songsong.dev/entry/S3%EC%97%90-%ED%8C%8C%EC%9D%BC%EC%9D%84-%EC%97%85%EB%A1%9C%EB%93%9C%ED%95%98%EB%8A%94-%EC%84%B8-%EA%B0%80%EC%A7%80-%EB%B0%A9%EB%B2%95)
+- [다른 분이 퍼블릭 S3 버킷을 만든 예시](https://blog.a-cloud.co.kr/2020/01/07/s3%EC%97%90-object%EC%97%85%EB%A1%9C%EB%93%9C%EC%8B%9C-%EC%9E%90%EB%8F%99-public-%EA%B6%8C%ED%95%9C%EB%B6%80%EC%97%AC-%EC%84%A4%EC%A0%95%ED%95%98%EA%B8%B0/)
 
 ## 경과
 - YSOShmupRecords의 백오피스는 Next.js 14를 사용하고 있기 때문에, App Router의 API Routes를 시도해본다.
