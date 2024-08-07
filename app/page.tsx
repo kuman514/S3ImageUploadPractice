@@ -58,7 +58,7 @@ export default function Home() {
                   const formData = new FormData();
                   formData.append('fileName', localFile.name);
 
-                  const response = await fetch('/api/create-presigned-url', {
+                  const response = await fetch('/api/presigned-url', {
                     method: 'POST',
                     body: formData,
                   });
