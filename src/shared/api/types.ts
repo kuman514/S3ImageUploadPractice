@@ -12,3 +12,15 @@ export interface FailedPostCreateSignedUrlResponse {
 export type PostCreateSignedUrlResponse =
   | SuccessfulPostCreateSignedUrlResponse
   | FailedPostCreateSignedUrlResponse;
+
+export interface SuccessfulDeleteImageResponse {
+  result: 'success';
+}
+
+export interface FailedDeleteImageResponse {
+  result: 'failed';
+}
+
+export type DeleteImageResponse =
+  | SuccessfulDeleteImageResponse
+  | FailedDeleteImageResponse;

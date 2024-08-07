@@ -2,7 +2,10 @@
 
 import { useMemo, useState } from 'react';
 
-import { SuccessfulPostCreateSignedUrlResponse } from '^/src/shared/api/types';
+import {
+  DeleteImageResponse,
+  SuccessfulPostCreateSignedUrlResponse,
+} from '^/src/shared/api/types';
 import ImageList from '^/src/shared/image-list';
 
 import styles from './page.module.css';
@@ -19,7 +22,12 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <span className={styles.code}>Selected Local Images</span>
-      <ImageList imageUrls={localImageUrls} />
+      <ImageList
+        imageUrls={localImageUrls}
+        onClickDelete={(index) => {
+          setLocalFileList(localFileList.filter((_, i) => i !== index));
+        }}
+      />
       <div className={styles['file-input']}>
         <label className={styles.code} htmlFor="file-select">
           Select Files
@@ -82,7 +90,22 @@ export default function Home() {
       </button>
 
       <span className={styles.code}>Uploaded Images</span>
-      <ImageList imageUrls={uploadedFileList} />
+      <ImageList
+        imageUrls={uploadedFileList}
+        onClickDelete={async (index) => {
+          const fileUrlSplit = uploadedFileList[index].split('/');
+          const response = await fetch(
+            `/api/presigned-url/${fileUrlSplit[fileUrlSplit.length - 1]}`,
+            {
+              method: 'DELETE',
+            }
+          );
+          const data = await (response.json() as Promise<DeleteImageResponse>);
+          if (data.result === 'success') {
+            setUploadedFileList(uploadedFileList.filter((_, i) => i !== index));
+          }
+        }}
+      />
     </main>
   );
 }
