@@ -2,8 +2,8 @@
 
 import { useMemo, useState } from 'react';
 
+import { SuccessfulPostCreateSignedUrlResponse } from '^/src/shared/api/types';
 import ImageList from '^/src/shared/image-list';
-import { SuccessfulPostCreateSignedUrlResponse } from '^/src/types';
 
 import styles from './page.module.css';
 

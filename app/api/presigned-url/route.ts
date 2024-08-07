@@ -1,20 +1,13 @@
-import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
+import { PutObjectCommand } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { PostCreateSignedUrlResponse } from '^/src/types';
 import { NextResponse } from 'next/server';
 
-const awsAccessKey = process.env.MY_AWS_ACCESS_KEY;
-const awsSecretKey = process.env.MY_AWS_SECRET_KEY;
-const amazonS3Bucket = process.env.MY_AWS_S3_BUCKET;
-const amazonS3BucketRegion = process.env.MY_AWS_S3_BUCKET_REGION;
-
-const s3 = new S3Client({
-  credentials: {
-    accessKeyId: awsAccessKey ?? 'IAM ACCESS KEY ABSENT',
-    secretAccessKey: awsSecretKey ?? 'IAM SECRET ACCESS KEY ABSENT',
-  },
-  region: amazonS3BucketRegion ?? 'S3 REGION ABSENT',
-});
+import {
+  amazonS3Bucket,
+  amazonS3BucketRegion,
+} from '^/src/shared/api/env-vars';
+import { s3 } from '^/src/shared/api/s3-client';
+import { PostCreateSignedUrlResponse } from '^/src/shared/api/types';
 
 async function getSignedFileUrl(fileName: File['name']) {
   const params = {
