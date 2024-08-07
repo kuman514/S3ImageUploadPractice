@@ -1,5 +1,6 @@
 import { PutObjectCommand, S3Client } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
+import { PostCreateSignedUrlResponse } from '^/src/types';
 import { NextResponse } from 'next/server';
 
 const awsAccessKey = process.env.MY_AWS_ACCESS_KEY;
@@ -32,16 +33,21 @@ async function getSignedFileUrl(fileName: File['name']) {
   };
 }
 
-export async function POST(request: Request) {
+export async function POST(
+  request: Request
+): Promise<NextResponse<PostCreateSignedUrlResponse>> {
   const formData = await request.formData();
   const fileName = formData.get('fileName') as string;
 
   try {
     const { signedUrl, fileUrl } = await getSignedFileUrl(fileName);
-    return NextResponse.json({ signedUrl, fileUrl }, { status: 201 });
+    return NextResponse.json(
+      { result: 'success', signedUrl, fileUrl },
+      { status: 201 }
+    );
   } catch {
     return NextResponse.json(
-      { error: 'Getting S3 signed URL did not work.' },
+      { result: 'failed', error: 'Getting S3 signed URL did not work.' },
       { status: 400 }
     );
   }
