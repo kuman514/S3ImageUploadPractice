@@ -3,6 +3,7 @@
 import { useMemo, useState } from 'react';
 
 import ImageList from '^/src/shared/image-list';
+import { SuccessfulPostCreateSignedUrlResponse } from '^/src/types';
 
 import styles from './page.module.css';
 
@@ -49,28 +50,32 @@ export default function Home() {
       </div>
       <button
         className={styles['upload-button']}
-        onClick={() => {
-          if (!localFileList[0]) {
-            return;
-          }
+        onClick={async () => {
+          const uploadedFileUrls = await (Promise.all(
+            localFileList.map(
+              (localFile) =>
+                new Promise(async (resolve) => {
+                  const formData = new FormData();
+                  formData.append('fileName', localFile.name);
 
-          const formData = new FormData();
-          formData.append('fileName', localFileList[0].name);
-          fetch('/api/create-presigned-url', {
-            method: 'POST',
-            body: formData,
-          })
-            .then((response) => response.json())
-            .then(async (body) => {
-              console.log(body.signedUrl);
+                  const response = await fetch('/api/create-presigned-url', {
+                    method: 'POST',
+                    body: formData,
+                  });
 
-              fetch(body.signedUrl, {
-                method: 'PUT',
-                body: await localFileList[0].arrayBuffer(),
-              }).then(() => {
-                setUploadedFileList(uploadedFileList.concat([body.fileUrl]));
-              });
-            });
+                  const data =
+                    await (response.json() as Promise<SuccessfulPostCreateSignedUrlResponse>);
+
+                  await fetch(data.signedUrl, {
+                    method: 'PUT',
+                    body: await localFile.arrayBuffer(),
+                  });
+
+                  resolve(data.fileUrl);
+                })
+            )
+          ) as Promise<string[]>);
+          setUploadedFileList(uploadedFileList.concat(uploadedFileUrls));
         }}
       >
         <span className={styles.code}>Upload Images</span>
